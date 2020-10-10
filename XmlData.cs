@@ -24,6 +24,9 @@ namespace BehaviorSimulation
         static ILog log = LogManager.GetLogger(typeof(XmlData));
         string path = "xml";
 
+        /// <summary>
+        /// The main class for handling all xml data.
+        /// </summary>
         public XmlData()
         {
             string basePath = Path.Combine(AssemblyDirectory, path);
@@ -40,11 +43,20 @@ namespace BehaviorSimulation
             log.InfoFormat("Loaded {0} xml files", xmls.Length);
         }
 
+        /// <summary>
+        /// Processes the xml files, and adds them depending on their root element.
+        /// </summary>
+        /// Note: Should probably check what kind of xml element we have to do with before trying to add it for different kinds of xml elements.
+        /// <param name="root"></param>
         void ProcessXml(XElement root)
         {
             AddObjects(root);
         }
 
+        /// <summary>
+        /// Adds all xml elements that are specified as a Object.
+        /// </summary>
+        /// <param name="root"></param>
         public void AddObjects(XElement root)
         {
             foreach(var elem in root.XPathSelectElements("//Object"))
@@ -56,7 +68,7 @@ namespace BehaviorSimulation
                     continue;
                 }
                 string clss = elem.Element("Class").Value;
-                log.InfoFormat("Loaded Object: {0}, class: {1}", name, clss);
+                log.DebugFormat("Loaded Object: {0}, class: {1}", name, clss);
             }
         }
     }
