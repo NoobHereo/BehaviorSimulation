@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -23,6 +24,7 @@ namespace BehaviorSimulation
 
         static ILog log = LogManager.GetLogger(typeof(XmlData));
         string path = "xml";
+        Dictionary<string, ObjectDescriptor> objectDescriptor;
 
         /// <summary>
         /// The main class for handling all xml data.
@@ -40,7 +42,8 @@ namespace BehaviorSimulation
                     ProcessXml(XElement.Load(stream));
                     //Proccess the xml here.
             }
-            log.InfoFormat("Loaded {0} xml files", xmls.Length);
+            string fileLengthSyntax = xmls.Length > 1 ? "files" : "file";
+            log.InfoFormat("Loaded {0} xml {1}", xmls.Length, fileLengthSyntax);
         }
 
         /// <summary>
@@ -54,7 +57,7 @@ namespace BehaviorSimulation
         }
 
         /// <summary>
-        /// Adds all xml elements that are specified as a Object.
+        /// Adds all xml elements that are specified as a Object and reads the name and class as the main xml attributes before passing the element to the descriptor.
         /// </summary>
         /// <param name="root"></param>
         public void AddObjects(XElement root)
@@ -69,6 +72,18 @@ namespace BehaviorSimulation
                 }
                 string clss = elem.Element("Class").Value;
                 log.DebugFormat("Loaded Object: {0}, class: {1}", name, clss);
+
+                objectDescriptor = new Dictionary<string, ObjectDescriptor>(); // Maybe a bad idea to make a new object descriptor for each xml?
+                switch(clss)
+                {
+                    case "Enemy":
+                        objectDescriptor[name] = new ObjectDescriptor(name, elem);
+                        break;
+
+                    default:
+                        Console.WriteLine("Class not found, not sure how it got this far?");
+                        break;
+                }
             }
         }
     }

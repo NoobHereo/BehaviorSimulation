@@ -2,6 +2,7 @@
 
   <Object name="Test Entity">
     <Class>Enemy</Class>
+    <Health>100</Health>
 
   </Object>
 
